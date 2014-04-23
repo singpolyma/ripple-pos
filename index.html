@@ -12,17 +12,28 @@
 					'&amount=' + encodeURIComponent(document.getElementById('amount').value) + '/' + data[1];
 			}
 
+			function size() {
+				if(window.innerWidth < window.innerHeight) {
+					return window.innerWidth / 2;
+				} else {
+					return window.innerHeight / 2;
+				}
+			}
+
 			function initQR() {
 				window.qrcode = new QRCode('qrcode', {
 					text: rippleURI(),
-					width: window.innerWidth / 4,
-					height: window.innerWidth / 4,
+					width: size(),
+					height: size(),
 					correctLevel : QRCode.CorrectLevel.H
 				});
 			}
 
 			window.addEventListener('load', function(){
 				initQR();
+
+				var data = window.location.hash.replace(/#/, '').split(/\//);
+				document.getElementById('currency').innerHTML = data[1];
 
 				document.getElementById('amount').addEventListener('keyup', function() {
 					qrcode.makeCode(rippleURI());
@@ -45,24 +56,28 @@
 				font-family: sans-serif;
 				text-align: center;
 			}
-			img {
-				margin: 2em auto;
+			input, h1, img {
+				margin: 0.5em auto;
+				font-size: 2em;
 			}
 			input {
-				display: block;
-				margin: 1em auto;
-				border: 1px solid black;
+				width: 5em;
 				padding: 0.5em;
+				border: 1px solid black;
 				border-radius: 0.5em;
-				width: 25%;
+				text-align: right;
 			}
+			#currency { font-size: 2em; }
 		</style>
 	</head>
 
 	<body>
 		<h1>Ripple Point of Sale System</h1>
 
-		<label>Amount <input id="amount" type="number" step="0.01" /></label>
+		<label>
+			<input id="amount" type="number" placeholder="Amount" step="0.01" />
+			<span id="currency"></span>
+		</label>
 		<div id="qrcode"></div>
 	</body>
 </html>
