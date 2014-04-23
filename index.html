@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<title>Ripple Point of Sale System</title>
+		<script type="text/javascript" src="qrcode.min.js"></script>
+		<script type="text/javascript">
+			function rippleURI() {
+				var data = window.location.hash.replace(/#/, '').split(/\//);
+				return 'http://ripple.com//send?to=' +
+					encodeURIComponent(data[0]) +
+					'&amount=' + encodeURIComponent(document.getElementById('amount').value) + '/' + data[1];
+			}
+
+			function initQR() {
+				window.qrcode = new QRCode('qrcode', {
+					text: rippleURI(),
+					width: window.innerWidth / 4,
+					height: window.innerWidth / 4,
+					correctLevel : QRCode.CorrectLevel.H
+				});
+			}
+
+			window.addEventListener('load', function(){
+				initQR();
+
+				document.getElementById('amount').addEventListener('keyup', function() {
+					qrcode.makeCode(rippleURI());
+				}, false);
+
+				document.getElementById('amount').addEventListener('change', function() {
+					qrcode.makeCode(rippleURI());
+				}, false);
+			}, false);
+
+			window.addEventListener('resize', function(){
+				document.getElementById('qrcode').innerHTML = '';
+				initQR();
+			}, false);
+		</script>
+
+		<style type="text/css">
+			html, body {
+				background: #ccc;
+				font-family: sans-serif;
+				text-align: center;
+			}
+			img {
+				margin: 2em auto;
+			}
+			input {
+				display: block;
+				margin: 1em auto;
+				border: 1px solid black;
+				padding: 0.5em;
+				border-radius: 0.5em;
+				width: 25%;
+			}
+		</style>
+	</head>
+
+	<body>
+		<h1>Ripple Point of Sale System</h1>
+
+		<label>Amount <input id="amount" type="number" step="0.01" /></label>
+		<div id="qrcode"></div>
+	</body>
+</html>
